@@ -1,6 +1,13 @@
 import uvicorn
 from fastapi import FastAPI
+from controller.Test01Controller import router as test01ControllerRouter
+from controller.Test02Controller import router as test02ControllerRouter
+
+# 创建FastAPI实例
+app = FastAPI()
+# 注册路由
+app.include_router(test01ControllerRouter)
+app.include_router(test02ControllerRouter)
 
 if __name__ == "__main__":
-    app = FastAPI()
-    uvicorn.run(app,host="127.0.0.1",port=8000)
+    uvicorn.run("main:app",host="127.0.0.1",port=8000, reload=True)
