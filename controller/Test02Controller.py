@@ -1,5 +1,5 @@
 from typing import Annotated
-from fastapi import APIRouter,Form
+from fastapi import APIRouter,Form,File, UploadFile
 from entity.User import User
 
 router = APIRouter()
@@ -12,3 +12,15 @@ def form(username: str = Form(...,description="用户名",example="admin",min_le
 @router.post("/form2")
 def form2(user: Annotated[User,Form()]):
     return user
+
+# 小文件
+@router.post("/update")
+def update(file: bytes=File(...)):
+    return {"file_size": len(file)}
+
+# 常用 大文件
+@router.post("/uploadBig")
+async def upload(file: UploadFile):
+    # 异步读取
+    contents = await file.read()
+    return {"filename": file.filename}
