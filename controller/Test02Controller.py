@@ -1,7 +1,8 @@
 from typing import Annotated
-from fastapi import APIRouter,Form,File, UploadFile
+from fastapi import APIRouter,Form,File, UploadFile,HTTPException
 from entity.User import User
 import aiofiles
+
 
 router = APIRouter()
 
@@ -24,10 +25,27 @@ def update(file: bytes=File(...)):
 async def upload(file: UploadFile):
     # 分块读取并保存完整文件
     async with aiofiles.open("./" + file.filename, "wb") as buffer:
-        while True:
-            chunk = await file.read(1024 * 1024)  # 读取1MB块
-            if not chunk:
-                break
+        # while True:
+        #     chunk = await file.read(1024 * 1024)  # 读取1MB块
+        #     if not chunk:
+        #         break
+        #     buffer.write(chunk)
+        while chunk := await file.read(1024 * 1024):
             buffer.write(chunk)
 
     return {"filename": file.filename}
+
+# 上传多个文件
+@router.post("/batch-upload")
+def batchUpload(files: list[UploadFile] = File(...)):
+    return {"filenames": [file.filename for file in files]}
+
+# 表单文件一起上传
+@router.post("/uploadForm")
+def uploadForm(file: UploadFile = File(...), username: str = Form(...)):
+    return {"filename": file.filename, "username": username}
+
+# 返回异常
+@router.get("/error")
+def error():
+    raise HTTPException(status_code=401, detail="Something went wrong")
