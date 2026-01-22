@@ -1,6 +1,7 @@
 from typing import Annotated
 from fastapi import APIRouter,Form,File, UploadFile
 from entity.User import User
+import aiofiles
 
 router = APIRouter()
 
@@ -21,6 +22,12 @@ def update(file: bytes=File(...)):
 # 常用 大文件
 @router.post("/uploadBig")
 async def upload(file: UploadFile):
-    # 异步读取
-    contents = await file.read()
+    # 分块读取并保存完整文件
+    async with aiofiles.open("./" + file.filename, "wb") as buffer:
+        while True:
+            chunk = await file.read(1024 * 1024)  # 读取1MB块
+            if not chunk:
+                break
+            buffer.write(chunk)
+
     return {"filename": file.filename}
