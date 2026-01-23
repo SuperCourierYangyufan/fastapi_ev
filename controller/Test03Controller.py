@@ -69,4 +69,4 @@ async def streamDownFile():
         filename="fastapi.pdf"
     )
 
-@router.get("/",response_class=HTMLResponse)
+    
