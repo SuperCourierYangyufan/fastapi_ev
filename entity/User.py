@@ -9,15 +9,15 @@ class User(BaseModel):
     # 必填,大于0,小于120
     age: int = Field(...,gt=0,lt=120)
     # 必填,正则表达式密码长度8-16
-    password: str = Field(...,pattern= r"^.{8,16}$")
+    password: str = Field(default="12345678", pattern= r"^.{8,16}$")
     # 自定义校验
-    sex: int 
+    sex: int = Field(default=1) 
     @field_validator('sex')
     def sex_validator(cls, v):
         if v not in [0, 1]:
             raise ValueError('性别必须为0或1')
         return v
     # 列表最小长度,最大长度
-    cards: list[str] = Field(min_items=1,max_items=3)
+    cards: list[str] = Field(default=["card1"], min_items=1, max_items=3)
     # 是否删除
     is_delete: IsDeleteEnum = Field(default=IsDeleteEnum.NO,description="是否删除,0:未删除,1:已删除")
