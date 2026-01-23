@@ -8,6 +8,16 @@ from loguru import logger
 # 创建FastAPI实例
 app = FastAPI()
 
+# cros
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 # 注册全局中间件
 @app.middleware("http")
 async def add_test_filter(request, call_next):
@@ -22,7 +32,6 @@ async def add_test_filter(request, call_next):
     response = await call_next(request)
     logger.info("处理后2")
     return response
-
 
 # 注册路由
 app.include_router(test01ControllerRouter)
