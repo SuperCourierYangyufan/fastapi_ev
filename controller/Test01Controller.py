@@ -3,7 +3,7 @@ from typing import Optional, Annotated
 from pydantic import BeforeValidator
 from entity.User import User
 
-router = APIRouter()
+router = APIRouter(prefix="/test01",tags=["test01","test02","test03"])
 
 @router.get("/hello")
 def hello():
@@ -24,7 +24,7 @@ def hello2(name: Optional[str] = "yyf"):
 @router.post("/user")
 def create_user(user: User):
     print(user)
-    return user;
+    return user
 
 def checkName(value: str):
     if value != "yyf":

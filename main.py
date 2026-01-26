@@ -1,9 +1,10 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 from controller.Test01Controller import router as test01ControllerRouter
 from controller.Test02Controller import router as test02ControllerRouter
 from controller.Test03Controller import router as test03ControllerRouter
 from loguru import logger
+from fastapi.middleware.cors import CORSMiddleware
 
 # 创建FastAPI实例
 app = FastAPI()
@@ -34,9 +35,15 @@ async def add_test_filter(request, call_next):
     return response
 
 # 注册路由
-app.include_router(test01ControllerRouter)
-app.include_router(test02ControllerRouter)
-app.include_router(test03ControllerRouter)
+# 主应用
+router = APIRouter(prefix='/api/v1')
+# 其他业务
+router.include_router(test01ControllerRouter)
+router.include_router(test02ControllerRouter)
+router.include_router(test03ControllerRouter)
+
+app.include_router(router)
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app",host="127.0.0.1",port=8000, reload=True)
