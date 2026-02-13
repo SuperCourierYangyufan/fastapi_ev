@@ -3,6 +3,7 @@ from fastapi import FastAPI, APIRouter
 from controller.Test01Controller import router as test01ControllerRouter
 from controller.Test02Controller import router as test02ControllerRouter
 from controller.Test03Controller import router as test03ControllerRouter
+from controller.Test04Controller import router as test04ControllerRouter
 from loguru import logger
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -41,7 +42,8 @@ router = APIRouter(prefix='/api/v1')
 router.include_router(test01ControllerRouter)
 router.include_router(test02ControllerRouter)
 router.include_router(test03ControllerRouter)
-
+router.include_router(test04ControllerRouter)
+router.include_router(test04ControllerRouter)
 app.include_router(router)
 
 
