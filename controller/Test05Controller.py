@@ -4,7 +4,7 @@ from fastapi import APIRouter
 from sqlalchemy import DateTime, func
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import Integer, String, JSON
+from sqlalchemy import Integer, String, JSON, delete
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import Depends
@@ -58,5 +58,12 @@ async def get_database():
 
 @router.get("/getUsers")
 async def getUsers(db:AsyncSession = Depends(get_database)):
-  result = await db.execute(select(User))
+  result = await db.execute(select(User).where(User.id == 1))
   return result.scalars().all()
+
+@router.get("/deleteUser")
+async def deleteUser(db:AsyncSession = Depends(get_database)):
+  await db.execute(delete(User).where(User.id == 1))
+  return "删除成功"
+
+@rou
