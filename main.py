@@ -4,11 +4,17 @@ from controller.Test01Controller import router as test01ControllerRouter
 from controller.Test02Controller import router as test02ControllerRouter
 from controller.Test03Controller import router as test03ControllerRouter
 from controller.Test04Controller import router as test04ControllerRouter
+from controller.Test05Controller import router as test05ControllerRouter
 from loguru import logger
 from fastapi.middleware.cors import CORSMiddleware
+from controller.Test05Controller import create_table
 
 # 创建FastAPI实例
-app = FastAPI()
+app = FastAPI(
+    title="FastAPI 项目",
+    description="基于 FastAPI 的后端服务",
+    version="1.0.0"
+)
 
 # cros
 app.add_middleware(
@@ -35,6 +41,11 @@ async def add_test_filter(request, call_next):
     logger.info("处理后2")
     return response
 
+@app.on_event("startup")
+async def startup_event():
+    await create_table()
+
+
 # 注册路由
 # 主应用
 router = APIRouter(prefix='/api/v1')
@@ -44,6 +55,7 @@ router.include_router(test02ControllerRouter)
 router.include_router(test03ControllerRouter)
 router.include_router(test04ControllerRouter)
 router.include_router(test04ControllerRouter)
+router.include_router(test05ControllerRouter)
 app.include_router(router)
 
 
